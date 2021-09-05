@@ -1,29 +1,30 @@
 <template>
   <div class="container">
-    <h1>ホーム</h1>
-    <p>{{ message }}</p>
-    <NuxtLink to="/register">新規登録</NuxtLink>
-    <br />
-    <NuxtLink to="/login">ログイン</NuxtLink>
-    <br />
-    <NuxtLink to="/logout">ログアウト</NuxtLink>
+    <img src="~/assets/images/logo.png">
+    <ul class="contents">
+      <li><NuxtLink to="/register" class="new">新規登録</NuxtLink></li>
+      <li><NuxtLink to="/login" class="normal">ログイン</NuxtLink></li>
+    </ul>
   </div>
 </template>
 
-<script>
-import firebase from '~/plugins/firebase'
-export default {
-  data() {
-    return {
-      message: 'ログインができておりません',
-    }
-  },
-  created() {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        this.message = 'ログイン済みです'
-      }
-    })
-  },
+<style scoped>
+.contents {
+  float: right;
 }
-</script>
+li {
+  display: inline-block;
+}
+.new {
+  margin: 10px;
+  font-size: 15px;
+  color: white;
+}
+.normal {
+  margin: 10px;
+  font-size: 15px;
+  color: white;
+}
+.container {
+  background-color: black;
+}
