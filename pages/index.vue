@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <img src="~/assets/images/logo.png">
+    <img src="images/favicon.ico">
     <ul class="contents">
       <li><NuxtLink to="/register" class="new">新規登録</NuxtLink></li>
       <li><NuxtLink to="/login" class="normal">ログイン</NuxtLink></li>
