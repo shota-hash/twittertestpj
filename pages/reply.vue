@@ -20,12 +20,23 @@
     <div class="comment">
       <table>
         <tr>
-          <th>ホーム</th>
+          <th>コメント</th>
         </tr>
-        <tr v-for="item in contactLists" :key="item.id">
-          <th>{{item.name}}<img class="logo4" src="~/assets/images/heart.png" @click="toggleBoolean"><span v-if="boolean">0</span><span v-else>1</span><img class="logo4" src="~/assets/images/cross.png" @click="deleteContact(item.id)"><NuxtLink to="/reply"><img class="logo5" src="~/assets/images/detail.png"></NuxtLink><p class="comment_content">{{item.news}}</p></th>
+        <tr>
+          <th>{{name}}<img class="logo4" src="~/assets/images/heart.png" @click="toggleBoolean"><span v-if="boolean">0</span><span v-else>1</span><img class="logo4" src="~/assets/images/cross.png" @click="deleteContact(item.id)"><NuxtLink to="/reply"><img class="logo5" src="~/assets/images/detail.png"></NuxtLink><p class="comment_content">{{news}}</p></th>
+        </tr>
+        <tr>
+          <td>コメント</td>
+        </tr>
+        <tr>
+          <td>{{name}}</td>
+          <td>{{reply}}</td>
         </tr>
       </table>
+      <div class="name2">
+          <input type="text" v-model="reply" />
+          <button class="button">コメント</button>
+      </div>
     </div>
   </div>
 </template>
