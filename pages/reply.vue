@@ -22,8 +22,8 @@
         <tr>
           <th>コメント</th>
         </tr>
-        <tr>
-          <th>{{name}}<img class="logo4" src="~/assets/images/heart.png" @click="toggleBoolean"><span v-if="boolean">0</span><span v-else>1</span><img class="logo4" src="~/assets/images/cross.png" @click="deleteContact(item.id)"><NuxtLink to="/reply"><img class="logo5" src="~/assets/images/detail.png"></NuxtLink><p class="comment_content">{{news}}</p></th>
+        <tr v-for="item in contactLists" :key="item.id">
+          <th>{{item.name}}<img class="logo4" src="~/assets/images/heart.png" @click="toggleBoolean"><span v-if="boolean">0</span><span v-else>1</span><img class="logo4" src="~/assets/images/cross.png" @click="deleteContact(item.id)"><NuxtLink to="/reply"><img class="logo5" src="~/assets/images/detail.png"></NuxtLink><p class="comment_content">{{item.news}}</p></th>
         </tr>
         <tr>
           <td>コメント</td>
@@ -34,8 +34,8 @@
         </tr>
       </table>
       <div class="name2">
-          <input type="text" v-model="reply" />
-          <button class="button">コメント</button>
+          <textarea type="text" name="reply" id="reply" v-model="newReply" />
+          <button @click="insertContact" class="button">コメント</button>
       </div>
     </div>
   </div>
@@ -47,6 +47,7 @@ export default {
   data() {
     return {
       newNews: "",
+      newReply:"",
       contactLists: [],
       boolean: true
     };
@@ -68,8 +69,37 @@ export default {
       this.contactLists = resData.data.data;
     },
     async insertContact() {
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          // User is signed in, see docs for a list of available properties
+          // https://firebase.google.com/docs/reference/js/firebase.User
+        var uid = user.uid;
+          // ...
+        } else {
+          // User is signed out
+          // ...
+        }
+      });
+      function currentUser() {
+        // [START auth_current_user]
+        const user = firebase.auth().currentUser;
+
+            if (user !== null) {
+              // The user object has basic properties such as display name, email, etc.
+              const displayName = user.displayName;
+              const email = user.email;
+              const photoURL = user.photoURL;
+              const emailVerified = user.emailVerified;
+                // The user's ID, unique to the Firebase project. Do NOT use
+                // this value to authenticate with your backend server, if
+                // you have one. Use User.getToken() instead.
+              const uid = user.uid;
+            }
+      }
       const sendData = {
-        news: this.newNews,
+        reply: this.newReply,
+        name: currentUser.displayName,
+        email: currentUser.email
       };
       await this.$axios.post("http://127.0.0.1:8000/api/contact/", sendData);
       this.getContact();
@@ -129,8 +159,9 @@ span, p {
 textarea {
   display: block;
   background-color: black;
-  border-color:purple;
+  border-color: white;
   color: white;
+  border-radius: 10px;
 }
 .button {
   background-color: purple;

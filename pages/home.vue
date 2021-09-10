@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import { email } from 'vee-validate/dist/rules';
 import firebase from '~/plugins/firebase'
 export default {
   data() {
@@ -57,8 +58,37 @@ export default {
       this.contactLists = resData.data.data;
     },
     async insertContact() {
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          // User is signed in, see docs for a list of available properties
+          // https://firebase.google.com/docs/reference/js/firebase.User
+        var uid = user.uid;
+          // ...
+        } else {
+          // User is signed out
+          // ...
+        }
+      });
+      function currentUser() {
+        // [START auth_current_user]
+        const user = firebase.auth().currentUser;
+
+            if (user !== null) {
+              // The user object has basic properties such as display name, email, etc.
+              const displayName = user.displayName;
+              const email = user.email;
+              const photoURL = user.photoURL;
+              const emailVerified = user.emailVerified;
+                // The user's ID, unique to the Firebase project. Do NOT use
+                // this value to authenticate with your backend server, if
+                // you have one. Use User.getToken() instead.
+              const uid = user.uid;
+            }
+      }
       const sendData = {
         news: this.newNews,
+        name: currentUser.displayName,
+        email: currentUser.email
       };
       await this.$axios.post("http://127.0.0.1:8000/api/contact/", sendData);
       this.getContact();
@@ -70,10 +100,10 @@ export default {
     toggleBoolean(){
           this.boolean = !this.boolean;
     },
-  },
     props: ["name"],
-  created() {
+    created() {
     this.getContact();
+    },
   },
 };
 </script>
@@ -118,8 +148,9 @@ span, p {
 textarea {
   display: block;
   background-color: black;
-  border-color:purple;
+  border-color: white;
   color: white;
+  border-radius: 10px;
 }
 .button {
   background-color: purple;
