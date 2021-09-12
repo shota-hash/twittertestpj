@@ -71,8 +71,9 @@ export default {
     async insertContact() {
       const sendData = {
         reply: this.newReply,
+        name: this.contactLists.id
       };
-      await this.$axios.post("http://127.0.0.1:8000/api/contact/", sendData);
+      await this.$axios.post("http://127.0.0.1:8000/api/contact/response", sendData);
       this.getContact();
     },
     async deleteContact(id) {

@@ -58,7 +58,7 @@ export default {
         .createUserWithEmailAndPassword(this.email, this.password)
         .then((data) => {
           data.user.sendEmailVerification().then(() => {
-            this.$router.replace('/home')
+            this.$router.replace('/login')
           })
         })
         .catch((error) => {

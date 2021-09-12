@@ -38,6 +38,7 @@ export default {
       newNews: "",
       contactLists: [],
       boolean: true,
+      user_id: contacts.id,
     };
   },
   methods: {
@@ -59,9 +60,9 @@ export default {
     async insertContact() {
       const sendData = {
         news: this.newNews,
-        contact_id: this.contactLists.id,
+        contact_id: this.user_id
       };
-      await this.$axios.post("http://127.0.0.1:8000/api/contact/", sendData);
+      await this.$axios.post("http://127.0.0.1:8000/api/contact/message", sendData);
       this.getContact();
     },
     async deleteContact(id) {
@@ -71,9 +72,13 @@ export default {
     toggleBoolean(){
           this.boolean = !this.boolean;
     },
-    props: ["name"],
     created() {
     this.getContact();
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.user_id = user.id
+      }
+    })
     },
   },
 };
