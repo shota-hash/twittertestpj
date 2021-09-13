@@ -38,7 +38,7 @@ export default {
       newNews: "",
       contactLists: [],
       boolean: true,
-      user_id: contacts.id,
+      user_id: this.uid,
     };
   },
   methods: {
@@ -60,7 +60,7 @@ export default {
     async insertContact() {
       const sendData = {
         news: this.newNews,
-        contact_id: this.user_id
+        contact_id: this.user_uid
       };
       await this.$axios.post("http://127.0.0.1:8000/api/contact/message", sendData);
       this.getContact();
@@ -74,11 +74,14 @@ export default {
     },
     created() {
     this.getContact();
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        this.user_id = user.id
-      }
-    })
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          var uid = user.uid;
+          console.log(user);
+        } else {
+          alert('ログインできてません');
+        }
+      });
     },
   },
 };
