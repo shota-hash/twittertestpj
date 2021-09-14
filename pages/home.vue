@@ -23,8 +23,9 @@
           <th>ホーム</th>
         </tr>
         <tr v-for="item in contactLists" :key="item.id">
-          <th>{{item.name}}<img class="logo4" src="~/assets/images/heart.png" @click="toggleBoolean"><span v-if="boolean">0</span><span v-else>1</span><img class="logo4" src="~/assets/images/cross.png" @click="deleteContact(item.id)"><NuxtLink to="/reply"><img class="logo5" src="~/assets/images/detail.png"></NuxtLink><p class="comment_content">{{item.news}}</p></th>
+          <th>{{item.name}}<img class="logo4" src="~/assets/images/heart.png" @click="toggleBoolean"><span v-if="boolean">0</span><span v-else>1</span><img class="logo4" src="~/assets/images/cross.png" @click="deleteContact(item.id)"><NuxtLink to="/reply"><img class="logo5" src="~/assets/images/detail.png"></NuxtLink></th>
         </tr>
+        <tr><td>{{newNews}}</td></tr>
       </table>
     </div>
   </div>
@@ -143,7 +144,7 @@ textarea {
 }
 .comment {
   width: 70%;
-  display: inline;
+  display: inline-block;
 }
 table {
   color: white;
@@ -159,13 +160,20 @@ table {
   height: 40%;
   margin-left: 10%;
 }
-table tr {
-  border: solid 1px white;
+table tr:not(:last-child) {
+  border: solid;
+  border-color: white;
+  border-width: 1px 1px 0px 1px;
 }
+table td {
+  border: solid;
+  border-color: white;
+  border-width: 0px 1px 1px 1px;
+}
+
 table th {
   display: flex;
 }
-.comment_content {
-  margin-left: -36%;
-}
+
+
 </style>

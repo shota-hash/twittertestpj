@@ -23,14 +23,15 @@
           <th>コメント</th>
         </tr>
         <tr v-for="item in contactLists" :key="item.id">
-          <th>{{item.name}}<img class="logo4" src="~/assets/images/heart.png" @click="toggleBoolean"><span v-if="boolean">0</span><span v-else>1</span><img class="logo4" src="~/assets/images/cross.png" @click="deleteContact(item.id)"><NuxtLink to="/reply"><img class="logo5" src="~/assets/images/detail.png"></NuxtLink><p class="comment_content">{{item.news}}</p></th>
+          <th>{{item.name}}<img class="logo4" src="~/assets/images/heart.png" @click="toggleBoolean"><span v-if="boolean">0</span><span v-else>1</span><img class="logo4" src="~/assets/images/cross.png" @click="deleteContact(item.id)"><NuxtLink to="/reply"><img class="logo5" src="~/assets/images/detail.png"></NuxtLink></th>
         </tr>
+        <tr><td>{{newNews}}</td></tr>
         <tr>
           <td>コメント</td>
         </tr>
-        <tr>
-          <td>{{name}}</td>
-          <td>{{reply}}</td>
+        <tr v-for="item in contactLists" :key="item.id">
+          <td>{{item.name}}</td>
+          <td>{{newReply}}</td>
         </tr>
       </table>
       <div class="name2">
@@ -47,9 +48,11 @@ export default {
   data() {
     return {
       newNews: "",
-      newReply:"",
       contactLists: [],
-      boolean: true
+      boolean: true,
+      user_id: "",
+      contact_id: "",
+      newReply: "",
     };
   },
   methods: {
@@ -70,10 +73,11 @@ export default {
     },
     async insertContact() {
       const sendData = {
-        reply: this.newReply,
-        name: this.contactLists.id
+        news: this.newNews,
+        contact_id: this.user_id,
       };
-      await this.$axios.post("http://127.0.0.1:8000/api/contact/response", sendData);
+      console.log(sendData);
+      await this.$axios.post("http://127.0.0.1:8000/api/contact/message", sendData);
       this.getContact();
     },
     async deleteContact(id) {
@@ -84,8 +88,16 @@ export default {
           this.boolean = !this.boolean;
     },
   },
-    props: ["name"],
   created() {
+    this.getContact();
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.user_id = user.uid;
+        console.log(user);
+      } else {
+        alert('ログインできてません');
+      }
+    });
     this.getContact();
   },
 };
