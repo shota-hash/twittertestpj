@@ -38,7 +38,8 @@ export default {
       newNews: "",
       contactLists: [],
       boolean: true,
-      user_id: this.uid,//ここが多分var uid = user.uid;を参照できてないと思います//
+      user_id: "",
+      contact_id: "",
     };
   },
   methods: {
@@ -62,6 +63,7 @@ export default {
         news: this.newNews,
         contact_id: this.user_id,
       };
+      console.log(sendData);
       await this.$axios.post("http://127.0.0.1:8000/api/contact/message", sendData);
       this.getContact();
     },
@@ -77,12 +79,13 @@ export default {
     this.getContact();
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        var uid = user.uid;
+        this.user_id = user.uid;
         console.log(user);
       } else {
         alert('ログインできてません');
       }
     });
+    this.getContact();
   },
 };
 </script>

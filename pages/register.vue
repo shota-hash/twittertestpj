@@ -44,21 +44,18 @@ export default {
         alert('パスワードは6文字以上で入力してください')
         return
       }
-      try {
-        await this.$axios.post("http://localhost:8000/api/contact/", {
-          name: this.name,
-          email: this.email,
-          password: this.password,
-        });
-      } catch {
-        alert("メールアドレスがすでに登録されています");
-      }
       firebase
         .auth()
         .createUserWithEmailAndPassword(this.email, this.password)
         .then((data) => {
           data.user.sendEmailVerification().then(() => {
-            this.$router.replace('/login')
+            const sendData = {
+            id: data.user.uid,
+            name: this.name,
+            email: this.email,
+            };
+          this.$axios.post("http://127.0.0.1:8000/api/contact", sendData);
+          this.$router.replace("/login");
           })
         })
         .catch((error) => {
