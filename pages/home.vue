@@ -23,7 +23,7 @@
           <th>ホーム</th>
         </tr>
         <tr v-for="item in contactLists" :key="item.id">
-          <th>{{item.name}}<img class="logo4" src="~/assets/images/heart.png" @click="toggleBoolean"><span v-if="boolean">0</span><span v-else>1</span><img class="logo4" src="~/assets/images/cross.png" @click="deleteContact(item.id)"><NuxtLink to="/reply"><img class="logo5" src="~/assets/images/detail.png"></NuxtLink></th>
+          <th>{{item.name}}<img class="logo4" src="~/assets/images/heart.png" @click="toggleBoolean"><span v-if="boolean">0</span><span v-else>1</span><img class="logo4" src="~/assets/images/cross.png" @click="deleteContact(item.id)"><NuxtLink to="/reply"><img class="logo5" src="~/assets/images/detail.png"></NuxtLink>{{item.news}}</th>
         </tr>
         <tr><td>{{newNews}}</td></tr>
       </table>
@@ -66,6 +66,7 @@ export default {
       };
       console.log(sendData);
       await this.$axios.post("http://127.0.0.1:8000/api/contact/message", sendData);
+      await this.$axios.post("http://127.0.0.1:8000/api/contact/", sendData);
       this.getContact();
     },
     async deleteContact(id) {
