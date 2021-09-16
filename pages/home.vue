@@ -18,15 +18,12 @@
       </div>
     </div>
     <div class="comment">
-      <table>
+      <table v-for="content in contacts" :key="content.id">
         <tr>
           <th>ホーム</th>
         </tr>
         <tr v-for="item in messages" :key="item.id">
-          <th>{{contacts.name}}<img class="logo4" src="~/assets/images/heart.png" @click="toggleBoolean"><span v-if="boolean">0</span><span v-else>1</span><img class="logo4" src="~/assets/images/cross.png" @click="deleteContact(item.id)"><NuxtLink to="/reply"><img class="logo5" src="~/assets/images/detail.png"></NuxtLink><p class="comment_content">{{item.news}}</p></th>
-        </tr>
-        <tr v-for="content in contacts" :key="content.id">
-          <td>{{content.name}}</td>
+          <th>{{content.name}}<img class="logo4" src="~/assets/images/heart.png" @click="toggleBoolean"><span v-if="boolean">0</span><span v-else>1</span><img class="logo4" src="~/assets/images/cross.png" @click="deleteContact(item.id)"><NuxtLink to="/reply"><img class="logo5" src="~/assets/images/detail.png"></NuxtLink><p class="comment_content">{{item.news}}</p></th>
         </tr>
       </table>
     </div>
