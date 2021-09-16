@@ -22,10 +22,12 @@
         <tr>
           <th>ホーム</th>
         </tr>
-        <tr v-for="item in contactLists" :key="item.id">
-          <th>{{item.name}}<img class="logo4" src="~/assets/images/heart.png" @click="toggleBoolean"><span v-if="boolean">0</span><span v-else>1</span><img class="logo4" src="~/assets/images/cross.png" @click="deleteContact(item.id)"><NuxtLink to="/reply"><img class="logo5" src="~/assets/images/detail.png"></NuxtLink>{{item.news}}</th>
+        <tr v-for="item in messages" :key="item.id">
+          <th>{{contacts.name}}<img class="logo4" src="~/assets/images/heart.png" @click="toggleBoolean"><span v-if="boolean">0</span><span v-else>1</span><img class="logo4" src="~/assets/images/cross.png" @click="deleteContact(item.id)"><NuxtLink to="/reply"><img class="logo5" src="~/assets/images/detail.png"></NuxtLink><p class="comment_content">{{item.news}}</p></th>
         </tr>
-        <tr><td>{{newNews}}</td></tr>
+        <tr v-for="content in contacts" :key="content.id">
+          <td>{{content.name}}</td>
+        </tr>
       </table>
     </div>
   </div>
@@ -37,10 +39,11 @@ export default {
   data() {
     return {
       newNews: "",
-      contactLists: [],
+      messages: [],
       boolean: true,
       user_id: "",
       contact_id: "",
+      contacts: [],
     };
   },
   methods: {
@@ -53,11 +56,17 @@ export default {
           this.$router.replace('/')
         })
     },
+    async getMessage() {
+      const resData = await this.$axios.get(
+        "http://127.0.0.1:8000/api/message"
+      );
+      this.messages = resData.data.data;
+    },
     async getContact() {
       const resData = await this.$axios.get(
-        "http://127.0.0.1:8000/api/contact/"
+        "http://127.0.0.1:8000/api/contact"
       );
-      this.contactLists = resData.data.data;
+      this.contacts = resData.data.data;
     },
     async insertContact() {
       const sendData = {
@@ -65,19 +74,18 @@ export default {
         contact_id: this.user_id,
       };
       console.log(sendData);
-      await this.$axios.post("http://127.0.0.1:8000/api/contact/message", sendData);
-      await this.$axios.post("http://127.0.0.1:8000/api/contact/", sendData);
-      this.getContact();
+      await this.$axios.post("http://127.0.0.1:8000/api/message", sendData);
     },
     async deleteContact(id) {
       await this.$axios.delete("http://127.0.0.1:8000/api/contact/" + id);
-      this.getContact();
+      this.getMessage();
     },
     toggleBoolean(){
           this.boolean = !this.boolean;
     },
   },
   created() {
+    this.getMessage();
     this.getContact();
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -87,6 +95,7 @@ export default {
         alert('ログインできてません');
       }
     });
+    this.getMessage();
     this.getContact();
   },
 };
@@ -161,20 +170,11 @@ table {
   height: 40%;
   margin-left: 10%;
 }
-table tr:not(:last-child) {
-  border: solid;
-  border-color: white;
-  border-width: 1px 1px 0px 1px;
+table tr {
+  border: solid 1px white;
 }
-table td {
-  border: solid;
-  border-color: white;
-  border-width: 0px 1px 1px 1px;
-}
-
 table th {
   display: flex;
 }
-
 
 </style>
