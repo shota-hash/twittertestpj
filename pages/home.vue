@@ -18,12 +18,12 @@
       </div>
     </div>
     <div class="comment">
-      <table v-for="content in contacts" :key="content.id">
+      <table>
         <tr>
           <th>ホーム</th>
         </tr>
         <tr v-for="item in messages" :key="item.id">
-          <th>{{content.name}}<img class="logo4" src="~/assets/images/heart.png" @click="toggleBoolean"><span v-if="boolean">0</span><span v-else>1</span><img class="logo4" src="~/assets/images/cross.png" @click="deleteContact(item.id)"><NuxtLink to="/reply"><img class="logo5" src="~/assets/images/detail.png"></NuxtLink><p class="comment_content">{{item.news}}</p></th>
+          <th>{{item.name}}<img class="logo4" src="~/assets/images/heart.png" @click="toggleBoolean"><span v-if="boolean">0</span><span v-else>1</span><img class="logo4" src="~/assets/images/cross.png" @click="deleteContact(item.id)"><NuxtLink to="/reply"><img class="logo5" src="~/assets/images/detail.png"></NuxtLink><p class="comment_content">{{item.news}}</p></th>
         </tr>
       </table>
     </div>
@@ -40,7 +40,6 @@ export default {
       boolean: true,
       user_id: "",
       contact_id: "",
-      contacts: [],
     };
   },
   methods: {
@@ -58,12 +57,7 @@ export default {
         "http://127.0.0.1:8000/api/message"
       );
       this.messages = resData.data.data;
-    },
-    async getContact() {
-      const resData = await this.$axios.get(
-        "http://127.0.0.1:8000/api/contact"
-      );
-      this.contacts = resData.data.data;
+      console.log(this.messages);
     },
     async insertContact() {
       const sendData = {
@@ -72,6 +66,7 @@ export default {
       };
       console.log(sendData);
       await this.$axios.post("http://127.0.0.1:8000/api/message", sendData);
+      this.getMessage();
     },
     async deleteContact(id) {
       await this.$axios.delete("http://127.0.0.1:8000/api/contact/" + id);
@@ -83,7 +78,6 @@ export default {
   },
   created() {
     this.getMessage();
-    this.getContact();
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.user_id = user.uid;
@@ -93,7 +87,6 @@ export default {
       }
     });
     this.getMessage();
-    this.getContact();
   },
 };
 </script>
