@@ -23,7 +23,7 @@
           <th>ホーム</th>
         </tr>
         <tr v-for="item in messages" :key="item.id">
-          <th>{{item.contact.name}}<img class="logo4" src="~/assets/images/heart.png" @click="counter"><span>{{item.like.count}}</span><img class="logo4" src="~/assets/images/cross.png" @click="deleteContact(item.id)"><NuxtLink to="/reply"><img class="logo5" src="~/assets/images/detail.png"></NuxtLink><p class="comment_content">{{item.news}}</p></th>
+          <th>{{item.contact.name}}<img class="logo4" src="~/assets/images/heart.png" @click="counter"><span></span><img class="logo4" src="~/assets/images/cross.png" @click="deleteContact(item.id)"><NuxtLink to="/reply"><img class="logo5" src="~/assets/images/detail.png"></NuxtLink><p class="comment_content">{{item.news}}</p></th>
         </tr>
       </table>
     </div>
@@ -39,7 +39,7 @@ export default {
       messages: [],
       user_id: "",
       contact_id: "",
-      count: 0,
+      message_id: "",
     };
   },
   methods: {
@@ -56,13 +56,10 @@ export default {
       const resData = await this.$axios.get(
         "http://127.0.0.1:8000/api/like"
       );
-      this.count = resData.data.data;
-      console.log(this.count);
     },
     async counter() {
-      this.count++;
       const sendData = {
-        message_id: this.messages.id,
+        message_id: this.messages[id],
         contact_id: this.user_id,
       };
       console.log(sendData);
