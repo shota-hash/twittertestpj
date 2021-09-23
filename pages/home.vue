@@ -59,7 +59,7 @@ export default {
     },
     async counter(id) {
       const sendData = {
-        message_id: this.message_id,
+        message_id: id,
         contact_id: this.user_id,
       };
       console.log(sendData);
