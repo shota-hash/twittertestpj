@@ -23,7 +23,7 @@
           <th>ホーム</th>
         </tr>
         <tr v-for="item in messages" :key="item.id">
-          <th>{{item.contact.name}}<img class="logo4" src="~/assets/images/heart.png" @click="counter(item.id)"><span></span><img class="logo4" src="~/assets/images/cross.png" @click="deleteContact(item.id)"><NuxtLink to="/reply"><img class="logo5" src="~/assets/images/detail.png"></NuxtLink><p class="comment_content">{{item.news}}</p></th>
+          <th>{{item.contact.name}}<img class="logo4" src="~/assets/images/heart.png" @click="counter(item.id)"><span>{{item.good}}</span><img class="logo4" src="~/assets/images/cross.png" @click="deleteContact(item.id)"><NuxtLink to="/reply"><img class="logo5" src="~/assets/images/detail.png"></NuxtLink><p class="comment_content">{{item.news}}</p></th>
         </tr>
       </table>
     </div>
@@ -40,6 +40,7 @@ export default {
       user_id: "",
       contact_id: "",
       message_id: "",
+      good: "",
     };
   },
   methods: {
@@ -56,6 +57,7 @@ export default {
       const resData = await this.$axios.get(
         "http://127.0.0.1:8000/api/like"
       );
+      this.good = resData.data.data;
     },
     async counter(id) {
       const sendData = {
