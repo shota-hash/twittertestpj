@@ -20,10 +20,10 @@
     <div class="comment">
       <table>
         <tr>
-          <th>コメント{{$route.params.id}}</th>
+          <th>コメント{{$route.params}}</th>
         </tr>
         <tr v-for="item in messages" :key="item.id">
-          <th>{{item.contact.name}}<img class="logo4" src="~/assets/images/heart.png" @click="counter(item.id)"><span>{{item.likeCount}}</span><img class="logo4" src="~/assets/images/cross.png" @click="deleteContact(item.id)"><p class="comment_content">{{item.news}}</p>{{$route.params}}</th>
+          <th>{{item.contact.name}}<img class="logo4" src="~/assets/images/heart.png" @click="counter(item.id)"><span>{{item.likeCount}}</span><img class="logo4" src="~/assets/images/cross.png" @click="deleteContact(item.id)"><p class="comment_content">{{item.news}}</p></th>
         </tr>
         <tr>
           <td>コメント</td>
@@ -53,6 +53,7 @@ export default {
       contact_id: "",
       newReply: "",
       message_id: "",
+      ParamsId: '',
     };
   },
   methods: {
@@ -64,6 +65,9 @@ export default {
           alert('ログアウトが完了しました')
           this.$router.replace('/')
         })
+    },
+    setParams(){
+      this.paramsId = this.$route.params.id || ''
     },
     async getGood() {
       const resData = await this.$axios.get(
@@ -118,6 +122,15 @@ export default {
       await this.$axios.post("http://127.0.0.1:8000/api/reply", sendData);
       this.getReply();
     },
+    async getContent() {
+      const resData = await this.$axios.request({
+              method: 'get',
+              url: 'http://127.0.0.1:8000/api/reply/' + this.paramsId,
+              params: {id: this.paramsId, user_id: this.user_id},
+            });
+      this.contents = resData.data.data;
+      console.log(contents);
+    },
   },
   created() {
     this.getMessage();
@@ -132,6 +145,7 @@ export default {
     this.getMessage();
     this.getGood();
     this.getReply();
+    this.setParams();
   },
 };
 </script>
