@@ -30,12 +30,12 @@
         </tr>
         <tr v-for="item in messages" :key="item.id">
           <td>{{item.contact.name}}</td>
-          <td>{{newReply}}</td>
+          <td>{{item.reply}}</td>
         </tr>
       </table>
       <div class="name2">
           <textarea type="text" name="reply" id="reply" v-model="newReply" />
-          <button @click="insertContact" class="button">コメント</button>
+          <button @click="insertReply" class="button">コメント</button>
       </div>
     </div>
   </div>
@@ -100,6 +100,23 @@ export default {
       await this.$axios.delete("http://127.0.0.1:8000/api/message/"+ id);
       this.getMessage();
     },
+    async getReply() {
+      const resData = await this.$axios.get(
+        "http://127.0.0.1:8000/api/reply"
+      );
+      this.messages = resData.data.data;
+      console.log(this.messages);
+    },
+    async insertReply() {
+      const sendData = {
+        reply: this.newReply,
+        message_id: this.message_id,
+        contact_id: this.user_id,
+      };
+      console.log(sendData);
+      await this.$axios.post("http://127.0.0.1:8000/api/reply", sendData);
+      this.getReply();
+    },
   },
   created() {
     this.getMessage();
@@ -113,6 +130,7 @@ export default {
     });
     this.getMessage();
     this.getGood();
+    this.getReply();
   },
 };
 </script>
