@@ -66,7 +66,7 @@ export default {
       };
       console.log(sendData);
       await this.$axios.post("http://127.0.0.1:8000/api/like", sendData);
-      this.getGood();
+      this.getMessage();
     },
     async getMessage() {
       const resData = await this.$axios.get(
