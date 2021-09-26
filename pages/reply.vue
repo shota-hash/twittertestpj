@@ -22,15 +22,14 @@
         <tr>
           <th>コメント</th>
         </tr>
-        <tr v-for="item in contactLists" :key="item.id">
-          <th>{{item.name}}<img class="logo4" src="~/assets/images/heart.png" @click="toggleBoolean"><span v-if="boolean">0</span><span v-else>1</span><img class="logo4" src="~/assets/images/cross.png" @click="deleteContact(item.id)"><NuxtLink to="/reply"><img class="logo5" src="~/assets/images/detail.png"></NuxtLink></th>
+        <tr v-for="item in messages" :key="item.id">
+          <th>{{item.contact.name}}<img class="logo4" src="~/assets/images/heart.png" @click="counter(item.id)"><span>{{item.likeCount}}</span><img class="logo4" src="~/assets/images/cross.png" @click="deleteContact(item.id)"><p class="comment_content">{{item.news}}</p></th>
         </tr>
-        <tr><td>{{newNews}}</td></tr>
         <tr>
           <td>コメント</td>
         </tr>
-        <tr v-for="item in contactLists" :key="item.id">
-          <td>{{item.name}}</td>
+        <tr v-for="item in messages" :key="item.id">
+          <td>{{item.contact.name}}</td>
           <td>{{newReply}}</td>
         </tr>
       </table>
@@ -48,11 +47,11 @@ export default {
   data() {
     return {
       newNews: "",
-      contactLists: [],
-      boolean: true,
+      messages: [],
       user_id: "",
       contact_id: "",
       newReply: "",
+      message_id: "",
     };
   },
   methods: {
@@ -65,11 +64,28 @@ export default {
           this.$router.replace('/')
         })
     },
-    async getContact() {
+    async getGood() {
       const resData = await this.$axios.get(
-        "http://127.0.0.1:8000/api/contact/"
+        "http://127.0.0.1:8000/api/like"
       );
-      this.contactLists = resData.data.data;
+      this.likeCount = resData.data.data;
+      console.log(likeCount);
+    },
+    async counter(id) {
+      const sendData = {
+        message_id: id,
+        contact_id: this.user_id,
+      };
+      console.log(sendData);
+      await this.$axios.post("http://127.0.0.1:8000/api/like", sendData);
+      this.getMessage();
+    },
+    async getMessage() {
+      const resData = await this.$axios.get(
+        "http://127.0.0.1:8000/api/message"
+      );
+      this.messages = resData.data.data;
+      console.log(this.messages);
     },
     async insertContact() {
       const sendData = {
@@ -77,19 +93,16 @@ export default {
         contact_id: this.user_id,
       };
       console.log(sendData);
-      await this.$axios.post("http://127.0.0.1:8000/api/contact/message", sendData);
-      this.getContact();
+      await this.$axios.post("http://127.0.0.1:8000/api/message", sendData);
+      this.getMessage();
     },
     async deleteContact(id) {
-      await this.$axios.delete("http://127.0.0.1:8000/api/contact/" + id);
-      this.getContact();
-    },
-    toggleBoolean(){
-          this.boolean = !this.boolean;
+      await this.$axios.delete("http://127.0.0.1:8000/api/message/"+ id);
+      this.getMessage();
     },
   },
   created() {
-    this.getContact();
+    this.getMessage();
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.user_id = user.uid;
@@ -98,7 +111,8 @@ export default {
         alert('ログインできてません');
       }
     });
-    this.getContact();
+    this.getMessage();
+    this.getGood();
   },
 };
 </script>
@@ -177,8 +191,5 @@ table tr {
 }
 table th {
   display: flex;
-}
-.comment_content {
-  margin-left: -36%;
 }
 </style>
