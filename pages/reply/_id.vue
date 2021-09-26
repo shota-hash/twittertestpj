@@ -28,9 +28,9 @@
         <tr>
           <td>コメント</td>
         </tr>
-        <tr v-for="item in messages" :key="item.id">
-          <td>{{item.contact.name}}</td>
-          <td>{{item.reply}}</td>
+        <tr v-for="reply in replys" :key="reply.id">
+          <td>{{reply.contact.name}}</td>
+          <td>{{reply.reply}}</td>
         </tr>
       </table>
       <div class="name2">
@@ -48,6 +48,7 @@ export default {
     return {
       newNews: "",
       messages: [],
+      replys: [],
       user_id: "",
       contact_id: "",
       newReply: "",
