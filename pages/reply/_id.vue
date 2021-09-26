@@ -20,10 +20,10 @@
     <div class="comment">
       <table>
         <tr>
-          <th>コメント</th>
+          <th>コメント{{$route.params.id}}</th>
         </tr>
         <tr v-for="item in messages" :key="item.id">
-          <th>{{item.contact.name}}<img class="logo4" src="~/assets/images/heart.png" @click="counter(item.id)"><span>{{item.likeCount}}</span><img class="logo4" src="~/assets/images/cross.png" @click="deleteContact(item.id)"><p class="comment_content">{{item.news}}</p></th>
+          <th>{{item.contact.name}}<img class="logo4" src="~/assets/images/heart.png" @click="counter(item.id)"><span>{{item.likeCount}}</span><img class="logo4" src="~/assets/images/cross.png" @click="deleteContact(item.id)"><p class="comment_content">{{item.news}}</p>{{$route.params}}</th>
         </tr>
         <tr>
           <td>コメント</td>
@@ -105,7 +105,7 @@ export default {
       const resData = await this.$axios.get(
         "http://127.0.0.1:8000/api/reply"
       );
-      this.messages = resData.data.data;
+      this.replys = resData.data.data;
       console.log(this.messages);
     },
     async insertReply() {
