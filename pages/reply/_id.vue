@@ -17,24 +17,24 @@
           <button @click="insertContact" class="button">シェアする</button>
       </div>
     </div>
-    <div class="comment">
+    <div class="comment" v-for="item in messages" :key="item.id">
       <table>
         <tr>
           <th>コメント</th>
         </tr>
-        <tr v-for="item in messages" :key="item.id">
+        <tr>
           <th>{{item.contact.name}}<img class="logo4" src="~/assets/images/heart.png" @click="counter(item.id)"><span>{{item.likeCount}}</span><img class="logo4" src="~/assets/images/cross.png" @click="deleteContact(item.id)"><p class="comment_content">{{item.news}}</p></th>
         </tr>
         <tr>
           <td>コメント</td>
         </tr>
-        <tr v-for="reply in replys" :key="reply.id">
-          <td>{{reply.contact.name}}</td>
-          <td>{{reply.reply}}</td>
+        <tr>
+          <td>{{item.contact.name}}</td>
+          <td>{{item.reply}}</td>
         </tr>
       </table>
       <div class="name2">
-          <textarea type="text" name="reply" id="reply" v-model="newReply" />
+          <textarea type="text" name="reply" id="reply" cols=64 v-model="newReply" />
           <button @click="insertReply" class="button">コメント</button>
       </div>
     </div>
@@ -48,7 +48,6 @@ export default {
     return {
       newNews: "",
       messages: [],
-      replys: [],
       user_id: "",
       contact_id: "",
       newReply: "",
@@ -110,12 +109,12 @@ export default {
         "http://127.0.0.1:8000/api/reply"
       );
       this.replys = resData.data.data;
-      console.log(this.messages);
+      console.log(this.replys);
     },
     async insertReply() {
       const sendData = {
         reply: this.newReply,
-        message_id: this.message_id,
+        message_id: this.$route.params.id,
         contact_id: this.user_id,
       };
       console.log(sendData);
