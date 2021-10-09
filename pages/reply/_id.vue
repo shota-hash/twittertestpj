@@ -107,7 +107,7 @@ export default {
     },
     async getReply() {
       const resData = await this.$axios.get(
-        "http://127.0.0.1:8000/api/reply"
+        "http://127.0.0.1:8000/api/reply"+ this.$route.params.id
       );
       this.replys = resData.data.data;
       console.log(this.replys);
