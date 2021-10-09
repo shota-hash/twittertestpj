@@ -29,7 +29,7 @@
           <td>コメント</td>
         </tr>
         <tr v-for="reply in replys" :key="reply.id">
-          <td>{{item.contact.name}}</td>
+          <td>{{reply}}</td>
           <td>{{reply.reply}}</td>
         </tr>
       </table>
@@ -107,7 +107,7 @@ export default {
     },
     async getReply() {
       const resData = await this.$axios.get(
-        "http://127.0.0.1:8000/api/reply"+ this.$route.params.id
+        "http://127.0.0.1:8000/api/reply/"+ this.$route.params.id
       );
       this.replys = resData.data.data;
       console.log(this.replys);
@@ -119,7 +119,7 @@ export default {
         contact_id: this.user_id,
       };
       console.log(sendData);
-      await this.$axios.post("http://127.0.0.1:8000/api/reply", sendData);
+      await this.$axios.post("http://127.0.0.1:8000/api/reply/", sendData);
       this.getReply();
     },
     async getContent() {
