@@ -29,7 +29,7 @@
           <td>コメント</td>
         </tr>
         <tr v-for="reply in replys" :key="reply.id">
-          <td>{{reply}}</td>
+          <td>{{reply.contact.name}}</td>
           <td>{{reply.reply}}</td>
         </tr>
       </table>
